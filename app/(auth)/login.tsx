@@ -9,19 +9,25 @@ import { Text, StyleSheet, View, Pressable, Alert } from "react-native";
 import * as Icons from "phosphor-react-native";
 import Button from "@/components/Button";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/contexts/authContext";
 
 const Login = () => {
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const [isloading, setLoading] = useState(false);
   const router = useRouter();
+  const { login: loginUser } = useAuth();
   const handleSubmit = async () => {
     if (!emailRef.current || !passwordRef.current) {
       Alert.alert("Login", "Please fill all the fields");
       return;
     }
-    console.log("Email : ", emailRef);
-    console.log("Password : ", passwordRef);
+    setLoading(true);
+    const res = await loginUser(emailRef.current, passwordRef.current);
+    setLoading(false);
+    if (!res.success) {
+      Alert.alert("Login", res.msg); 
+    }
   };
   return (
     <ScreenWrapper>
@@ -82,7 +88,7 @@ const Login = () => {
         {/* Footer */}
         <View style={styles.footer}>
           <Typo size={15}>Dont have an account ? </Typo>
-          <Pressable onPress={() => router.push("/(auth)/register")}>
+          <Pressable onPress={() => router.replace("/(auth)/register")}>
             <Typo size={15} fontWeight={"700"} color={colors.primary}>
               Sign Up
             </Typo>
@@ -98,11 +104,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: spacingY._30,
     paddingHorizontal: spacingX._20,
-  },
-  welcomeText: {
-    fontSize: verticalScale(20),
-    fontWeight: "bold",
-    color: colors.text,
   },
   form: { gap: spacingY._20 },
   footer: {
