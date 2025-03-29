@@ -3,7 +3,7 @@ import React from "react";
 import { Text, StyleSheet, View } from "react-native";
 
 const _layout = () => {
-  return <Stack></Stack>;
+  return <Stack screenOptions={{ headerShown: false }}></Stack>;
 };
 
 const styles = StyleSheet.create({});
