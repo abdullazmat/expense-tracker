@@ -1,10 +1,13 @@
-import { Stack } from "expo-router";
 import React from "react";
 import { Text, StyleSheet, View } from "react-native";
 
-const _layout = () => {
-  return <Stack></Stack>;
+const index = () => {
+  return (
+    <View>
+      <Text> textInComponent </Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({});
-export default _layout;
+export default index;
