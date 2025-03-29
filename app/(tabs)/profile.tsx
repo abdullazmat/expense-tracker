@@ -1,11 +1,13 @@
+import ScreenWrapper from "@/components/ScreenWrapper";
+import Typo from "@/components/Typo";
 import React, { Component } from "react";
 import { Text, StyleSheet, View } from "react-native";
 
 const Profile = () => {
   return (
-    <View>
-      <Text> Profile</Text>
-    </View>
+    <ScreenWrapper>
+      <Typo> Profile</Typo>
+    </ScreenWrapper>
   );
 };
 

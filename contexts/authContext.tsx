@@ -19,13 +19,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
-      console.log("firebase user", firebaseUser);
       if (firebaseUser) {
         setUser({
           uid: firebaseUser.uid,
           email: firebaseUser.email,
           name: firebaseUser.displayName,
         });
+        updateUserData(firebaseUser.uid);
         router.replace("/(tabs)");
       } else {
         // no user

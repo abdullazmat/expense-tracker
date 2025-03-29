@@ -1,11 +1,13 @@
+import ScreenWrapper from "@/components/ScreenWrapper";
+import Typo from "@/components/Typo";
 import React, { Component } from "react";
 import { Text, StyleSheet, View } from "react-native";
 
 const Statistics = () => {
   return (
-    <View>
-      <Text> Statistics </Text>
-    </View>
+    <ScreenWrapper>
+      <Typo> Statistics </Typo>
+    </ScreenWrapper>
   );
 };
 
