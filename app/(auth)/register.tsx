@@ -1,0 +1,13 @@
+import React, { Component } from "react";
+import { Text, StyleSheet, View } from "react-native";
+
+const Register = () => {
+  return (
+    <View>
+      <Text> textInComponent </Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({});
+export default Register;

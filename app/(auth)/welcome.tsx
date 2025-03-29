@@ -3,6 +3,7 @@ import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
+import { useRouter } from "expo-router";
 import React, { Component } from "react";
 import {
   Text,
@@ -15,12 +16,16 @@ import {
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 const Welcome = () => {
+  const router = useRouter();
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         {/* Hero Section  */}
         <View>
-          <TouchableOpacity style={styles.loginButton}>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => router.push("/(auth)/login")}
+          >
             <Typo fontWeight={"500"}>Sign In</Typo>
           </TouchableOpacity>
           <Animated.Image
@@ -65,7 +70,7 @@ const Welcome = () => {
               .damping(12)}
             style={styles.buttonContainer}
           >
-            <Button>
+            <Button onPress={() => router.push("/(auth)/register")}>
               <Typo size={22} color={colors.black} fontWeight={"600"}>
                 Get Started
               </Typo>
