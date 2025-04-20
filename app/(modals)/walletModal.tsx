@@ -25,7 +25,7 @@ import { updateUser } from "@/services/userService";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import ImageUpload from "@/components/ImageUpload";
-import { createOrUpdateWallet } from "@/services/walletService";
+import { createOrUpdateWallet, deleteWallet } from "@/services/walletService";
 
 const walletModal = () => {
   const { user, updateUserData } = useAuth();
@@ -74,6 +74,36 @@ const walletModal = () => {
     }
   };
 
+  const onDelete = async () => {
+    if (!oldWallet?.id) return;
+    setLoading(true);
+    const res = await deleteWallet(oldWallet?.id);
+    setLoading(false);
+    if (res.success) {
+      router.back();
+    } else {
+      Alert.alert("Wallet", res.msg);
+    }
+  };
+
+  const showDeleteAlert = () => {
+    Alert.alert(
+      "Confirm",
+      "Are you sure you want to do this? \n This will remove all the transactions related to this wallet ",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("cancel order"),
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => onDelete(),
+          style: "destructive",
+        },
+      ]
+    );
+  };
   return (
     <ModalWrapper>
       <View style={styles.container}>
@@ -108,6 +138,18 @@ const walletModal = () => {
 
       {/*  Footer */}
       <View style={styles.footer}>
+        {oldWallet?.id && !loading && (
+          <Button
+            onPress={showDeleteAlert}
+            style={{
+              backgroundColor: colors.rose,
+              paddingHorizontal: spacingX._15,
+            }}
+          >
+            <Icons.Trash color="white" size={verticalScale(24)} weight="bold" />
+          </Button>
+        )}
+
         <Button onPress={onsubmit} loading={loading} style={{ flex: 1 }}>
           <Typo color={colors.black} fontWeight={"700"}>
             {oldWallet?.id ? "Update Wallet" : "Add Wallet"}
