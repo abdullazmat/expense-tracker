@@ -17,10 +17,26 @@ import {
 import * as Icons from "phosphor-react-native";
 import HomeCard from "@/components/HomeCard";
 import TransactionList from "@/components/TransactionList";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
+import { limit, orderBy, where } from "firebase/firestore";
+import useFetchData from "@/hooks/useFetchData";
+import { TransactionType } from "@/types";
 
 const Home = () => {
   const { user } = useAuth();
+  const router = useRouter();
+
+  const constraints = [
+    where("uid", "==", user?.uid),
+    orderBy("date", "desc"),
+    limit(30),
+  ];
+
+  const {
+    data: recentTransactions,
+    error,
+    loading: transactionsLoading,
+  } = useFetchData<TransactionType>("transactions", constraints);
 
   return (
     <ScreenWrapper>
@@ -55,9 +71,9 @@ const Home = () => {
           {/* Transactions */}
           <TransactionList
             title="Recent Transactions"
-            loading={false}
+            loading={transactionsLoading}
             emptyListMessage="No Transactions added"
-            data={[1, 2, 3, 4]}
+            data={recentTransactions}
           />
         </ScrollView>
 

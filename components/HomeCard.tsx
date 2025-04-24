@@ -5,8 +5,33 @@ import { scale, verticalScale } from "@/utils/styling";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { ImageBackground } from "expo-image";
 import * as Icons from "phosphor-react-native";
+import useFetchData from "@/hooks/useFetchData";
+import { WalletType } from "@/types";
+import { orderBy, where } from "firebase/firestore";
+import { useAuth } from "@/contexts/authContext";
 
 const HomeCard = () => {
+  const { user } = useAuth();
+  const {
+    data: wallets,
+    error,
+    loading: walletLoading,
+  } = useFetchData<WalletType>("wallets", [
+    where("uid", "==", user?.uid),
+    orderBy("created", "desc"),
+  ]);
+
+  const getTotals = () => {
+    return wallets.reduce(
+      (totals: any, item: WalletType) => {
+        totals.balances = totals.balances + Number(item.amount);
+        totals.income = totals.income + Number(item.totalIncome);
+        totals.expenses = totals.expenses + Number(item.totalExpenses);
+        return totals;
+      },
+      { balances: 0, income: 0, expenses: 0 }
+    );
+  };
   return (
     <ImageBackground
       source={require("../assets/images/card.png")}
@@ -27,7 +52,7 @@ const HomeCard = () => {
             />
           </View>
           <Typo color={colors.black} fontWeight={"bold"} size={30}>
-            $60000
+            ${walletLoading ? "------" : getTotals()?.balances?.toFixed(2)}
           </Typo>
         </View>
         {/* Total Expenses and Income */}
@@ -48,7 +73,7 @@ const HomeCard = () => {
             </View>
             <View style={{ alignSelf: "center" }}>
               <Typo size={17} color={colors.green} fontWeight={600}>
-                $1000
+                ${walletLoading ? "------" : getTotals()?.income?.toFixed(2)}
               </Typo>
             </View>
           </View>
@@ -68,7 +93,7 @@ const HomeCard = () => {
             </View>
             <View style={{ alignSelf: "center" }}>
               <Typo size={17} color={colors.rose} fontWeight={600}>
-                $1000
+                ${walletLoading ? "------" : getTotals()?.expenses?.toFixed(2)}
               </Typo>
             </View>
           </View>

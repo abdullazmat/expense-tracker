@@ -34,6 +34,7 @@ import useFetchData from "@/hooks/useFetchData";
 import { orderBy, where } from "firebase/firestore";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { createOrUpdateTransaction } from "@/services/transactionService";
 
 const transactionModal = () => {
   const { user } = useAuth();
@@ -66,7 +67,6 @@ const transactionModal = () => {
   };
   const oldTransaction: { name: string; image: string; id: string } =
     useLocalSearchParams();
-  console.log(oldTransaction);
 
   useEffect(() => {
     if (oldTransaction?.id) {
@@ -84,7 +84,6 @@ const transactionModal = () => {
       Alert.alert("Transaction", "Please fill all the fields");
       return;
     }
-    console.log("Good to go");
     let transactionData: TransactionType = {
       type,
       amount,
@@ -95,7 +94,16 @@ const transactionModal = () => {
       image,
       uid: user?.uid,
     };
-    console.log("Transaction Data : ", transactionData);
+
+    // todp : include transaction id for uploading
+    setLoading(true);
+    const res = await createOrUpdateTransaction(transactionData);
+    setLoading(false);
+    if (res.success) {
+      router.back();
+    } else {
+      Alert.alert("Transaction", res.msg);
+    }
   };
 
   const onDelete = async () => {
