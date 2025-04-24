@@ -19,14 +19,16 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ style, children }) => {
     <View
       style={[
         {
-          paddingTop,
           flex: 1,
           backgroundColor: colors.neutral900,
         },
         style,
       ]}
     >
-      <StatusBar barStyle={"dark-content"} />
+      <StatusBar
+        barStyle={"light-content"}
+        backgroundColor={colors.neutral900}
+      />
       {children}
     </View>
   );
